@@ -1,3 +1,4 @@
+import csv
 import time
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -9,8 +10,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support.ui import Select
 
 class TestConduit(object):
-
-
     def setup_method(self):
         service = Service(executable_path=ChromeDriverManager().install())
         options = Options()
@@ -22,18 +21,38 @@ class TestConduit(object):
         self.browser.get(URL)
         self.browser.maximize_window()
     def teardown_method(self):
-        self.browser.quit()
+        pass
+        # self.browser.quit()
 
     def test_sign_up(self):
-        sign_up_button = self.browser.find_elements(By.CLASS_NAME, 'nav-link')[0]
+        sign_up_button = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/register"]')))
         sign_up_button.click()
+        username_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Username"]')))
+        username_input.send_keys('test name')
+        email_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Email"]')))
+        email_input.send_keys('testname2@testmail.com')
+        password_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Password"]')))
+        password_input.send_keys('HurkaGyurka#5')
+        submit_sign_up = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
+        submit_sign_up.click()
+        success_report = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[class="swal-modal"]')))
+        assert success_report.is_displayed()
+        successful_ok_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="swal-button swal-button--confirm"]')))
+        successful_ok_btn.click()
 
-    # def test_sign_in(self):
-    #     pass
-    #
-    # def test_apply_privacy_statement(self):
-    #     pass
-    #
+    def test_sign_in(self):
+        sign_in_header_button = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/login"]')))
+        sign_in_header_button.click()
+        sign_in_email_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Email"]')))
+        sign_in_email_input.send_keys('testname2@testmail.com')
+        sign_in_password_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Password"]')))
+        sign_in_password_input.send_keys('HurkaGyurka#5')
+        sign_in_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
+        sign_in_btn.click()
+
+    def test_apply_privacy_statement_as_cookies(self):
+
+
     # def test_listed_datas(self):
     #     pass
     #
