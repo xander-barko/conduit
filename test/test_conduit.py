@@ -24,6 +24,10 @@ class TestConduit(object):
         pass
         # self.browser.quit()
 
+    def test_apply_privacy_statement_as_cookies(self):
+        cookie_accept_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
+        cookie_accept_btn.click()
+
     def test_sign_up(self):
         sign_up_button = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/register"]')))
         sign_up_button.click()
@@ -49,9 +53,6 @@ class TestConduit(object):
         sign_in_password_input.send_keys('HurkaGyurka#5')
         sign_in_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
         sign_in_btn.click()
-
-    def test_apply_privacy_statement_as_cookies(self):
-
 
     # def test_listed_datas(self):
     #     pass
