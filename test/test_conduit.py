@@ -29,6 +29,7 @@ class TestConduit(object):
 
     def test_apply_privacy_statement_as_cookies(self):
         cookie_accept_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
+        time.sleep(5)
         cookie_accept_btn.click()
 
     def test_sign_up(self):
