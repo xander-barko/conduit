@@ -1,5 +1,6 @@
 import csv
 import time
+from sign_up_data import sign_up_data
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
@@ -14,7 +15,7 @@ class TestConduit(object):
         service = Service(executable_path=ChromeDriverManager().install())
         options = Options()
         options.add_experimental_option("detach", True)
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('window-position=-1000,0')
@@ -29,18 +30,19 @@ class TestConduit(object):
 
     def test_apply_privacy_statement_as_cookies(self):
         cookie_accept_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
-        time.sleep(5)
         cookie_accept_btn.click()
+        cookie_div = WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.ID, 'cookie-policy-panel')))
+        assert not cookie_div.is_displayed()
 
     def test_sign_up(self):
         sign_up_button = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/register"]')))
         sign_up_button.click()
         username_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Username"]')))
-        username_input.send_keys('test name')
+        username_input.send_keys(sign_up_data[0])
         email_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Email"]')))
-        email_input.send_keys('testname2@testmail.com')
+        email_input.send_keys(sign_up_data[1])
         password_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Password"]')))
-        password_input.send_keys('HurkaGyurka#5')
+        password_input.send_keys(sign_up_data[2])
         submit_sign_up = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
         submit_sign_up.click()
         success_report = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[class="swal-modal"]')))
@@ -52,11 +54,15 @@ class TestConduit(object):
         sign_in_header_button = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/login"]')))
         sign_in_header_button.click()
         sign_in_email_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Email"]')))
-        sign_in_email_input.send_keys('testname2@testmail.com')
+        sign_in_email_input.send_keys(sign_up_data[1])
         sign_in_password_input = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Password"]')))
-        sign_in_password_input.send_keys('HurkaGyurka#5')
+        sign_in_password_input.send_keys(sign_up_data[2])
         sign_in_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
         sign_in_btn.click()
+        name_text = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[class="nav-link"]')))
+        assert name_text.text == sign_up_data[0]
+
+
 
     # def test_listed_datas(self):
     #     pass

@@ -1,0 +1,1 @@
+sign_up_data = ['Test Name', 'testname4@testmail.com', 'passWord10#']
