@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from sign_up_data import sign_up_data
 
+
 def sign_in(browser):
     sign_in_header_button = WebDriverWait(browser, 5).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/login"]')))
