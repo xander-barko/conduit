@@ -113,9 +113,21 @@ class TestConduit(object):
         assert len(global_feed_list) != 0
 
     # Több oldalas lista bejárása
-    # def test_navigation_links(self):
-    #     pass
-    #
+    def test_navigation_links(self):
+        sign_in(self.browser)
+
+        pagination_btns = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//a[@class="page-link"]')))
+
+        all_pages_number = len(pagination_btns)
+
+        page_counter = 0
+        for page_button in pagination_btns:
+            page_button.click()
+            page_counter += 1
+
+        assert all_pages_number == page_counter
+
     # Új adat bevitele
     # def test_write_new_data(self):
     #     pass
@@ -142,6 +154,8 @@ class TestConduit(object):
 
         log_out_btn = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located((By.XPATH, '//li[@class="nav-item"]')))[4]
+        # assert len(self.browser.find_elements(By.XPATH, '//li[@class="nav-item"]')) == 7
         log_out_btn.click()
-
+        time.sleep(2)
         assert len(self.browser.find_elements(By.XPATH, '//li[@class="nav-item"]')) == 4
+        # assert not log_out_btn.is_enabled()
