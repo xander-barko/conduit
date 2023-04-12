@@ -34,8 +34,7 @@ class TestConduit(object):
         cookie_accept_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located(
             (By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
         cookie_accept_btn.click()
-        cookie_panel = self.browser.find_elements(By.ID, 'cookie-policy-panel')
-        assert len(cookie_panel) == 0
+        assert len(self.browser.find_elements(By.ID, 'cookie-policy-panel')) == 0
 
     # Regisztráció érvényes adatokkal
     def test_sign_up(self):
