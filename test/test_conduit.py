@@ -112,7 +112,7 @@ class TestConduit(object):
 
         assert len(global_feed_list) != 0
 
-    # Több oldalas lista bejárása
+    # Több oldalas lista bejárása - A Global feed oldalainak bejárása
     def test_navigation_links(self):
         sign_in(self.browser)
 
