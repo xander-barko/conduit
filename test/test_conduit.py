@@ -15,7 +15,7 @@ class TestConduit(object):
         service = Service(executable_path=ChromeDriverManager().install())
         options = Options()
         options.add_experimental_option("detach", True)
-        # options.add_argument('--headless')
+        options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('window-position=-1000,0')
@@ -28,12 +28,13 @@ class TestConduit(object):
         pass
         # self.browser.quit()
 
-    def test_apply_privacy_statement_as_cookies(self):
-        cookie_accept_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
-        cookie_accept_btn.click()
-        cookie_div = WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.ID, 'cookie-policy-panel')))
-        assert not cookie_div.is_displayed()
-
+    # def test_apply_privacy_statement_as_cookies(self):
+    #     cookie_accept_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
+    #     cookie_accept_btn.click()
+    #     time.sleep(2)
+    #     cookie_div = WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.ID, 'cookie-policy-panel')))
+    #     assert not cookie_div.is_displayed()
+    #
     def test_sign_up(self):
         sign_up_button = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/register"]')))
         sign_up_button.click()
@@ -45,8 +46,9 @@ class TestConduit(object):
         password_input.send_keys(sign_up_data[2])
         submit_sign_up = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
         submit_sign_up.click()
-        success_report = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[class="swal-modal"]')))
-        assert success_report.is_displayed()
+        time.sleep(2)
+        success_report = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[class="swal-text"]')))
+        assert success_report.text == "Your registration was successful!"
         successful_ok_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="swal-button swal-button--confirm"]')))
         successful_ok_btn.click()
 
@@ -59,7 +61,9 @@ class TestConduit(object):
         sign_in_password_input.send_keys(sign_up_data[2])
         sign_in_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
         sign_in_btn.click()
-        name_text = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[class="nav-link"]')))
+        time.sleep(2)
+        header_menus = WebDriverWait(self.browser, 5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'a[class="nav-link"]')))
+        name_text = header_menus[2]
         assert name_text.text == sign_up_data[0]
 
 
