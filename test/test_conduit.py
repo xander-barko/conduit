@@ -1,6 +1,5 @@
 import csv
 import time
-from sign_up_data import sign_up_data
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
@@ -9,6 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support.ui import Select
+
+from sign_up_data import sign_up_data
+from functions_to_import import sign_in
 
 
 class TestConduit(object):
@@ -81,9 +83,19 @@ class TestConduit(object):
         name_text = header_menus[2]
         assert name_text.text == sign_up_data[0]
 
-    # def test_listed_datas(self):
-    #     pass
-    #
+    # Adatok listázása - Global Feed cikkek címeinek listázása bejelentkezés után
+    def test_listed_datas(self):
+        sign_in(self.browser)
+        global_feed_data = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//h1')))[1::]
+
+        global_feed_list = []
+        for feed in global_feed_data:
+            global_feed_list.append(feed.text)
+        print(global_feed_list)
+
+        assert len(global_feed_list) != 0
+
     # def test_navigation_links(self):
     #     pass
     #
