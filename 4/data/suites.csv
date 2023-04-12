@@ -1,0 +1,3 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Wed Apr 12 08:04:44 GMT 2023","Wed Apr 12 08:04:46 GMT 2023","2541","test","test_conduit","TestConduit","","","test_sign_up",""
+"passed","Wed Apr 12 08:04:48 GMT 2023","Wed Apr 12 08:04:50 GMT 2023","2276","test","test_conduit","TestConduit","","","test_sign_in",""
