@@ -9,8 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support.ui import Select
 
-from sign_up_data import sign_up_data, new_article_data
-from functions_to_import import sign_in
+from essential_data import *
+from functions_to_import import *
 
 
 class TestConduit(object):
@@ -203,11 +203,42 @@ class TestConduit(object):
                 assert new_published_article.text == article[0]
                 time.sleep(1)
 
-
     # Meglévő adat módosítása
-    # def test_modify_data(self):
-    #     pass
-    #
+    def test_modify_data(self):
+        sign_in(self.browser)
+
+        profile_settings_btn = WebDriverWait(self.browser, 5).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/settings"]')))
+        profile_settings_btn.click()
+
+        image_url_input = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="URL of profile picture"]')))
+        bio_text_input = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="Short bio about you"]')))
+        password_input = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Password"]')))
+        update_settings_btn = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-lg btn-primary pull-xs-right"]')))
+
+        image_url_input.clear()
+        bio_text_input.clear()
+        password_input.clear()
+
+        image_url_input.send_keys(modify_profile[0])
+        bio_text_input.send_keys(modify_profile[1])
+        password_input.send_keys(modify_profile[2])
+        update_settings_btn.click()
+
+        update_success_report = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'div[class="swal-title"]')))
+
+        assert update_success_report.text == "Update successful!"
+
+        successful_ok_btn = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="swal-button swal-button--confirm"]')))
+        successful_ok_btn.click()
+
+
     # Adat vagy adatok törlése
     # def test_delete_data(self):
     #     pass
