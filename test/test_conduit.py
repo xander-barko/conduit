@@ -1,5 +1,6 @@
 import csv
 import time
+import pytest
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
@@ -28,10 +29,10 @@ class TestConduit(object):
         self.browser.maximize_window()
 
     def teardown_method(self):
-        pass
+        # pass
         self.browser.quit()
 
-    # Adatkezelési nyilatkozat használata - cookie-k elfogadása
+    # Adatkezelési nyilatkozat használata - Cookie-k elfogadása
     def test_apply_privacy_statement_as_cookies(self):
         cookie_accept_btn = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located(
             (By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
@@ -39,7 +40,7 @@ class TestConduit(object):
 
         assert len(self.browser.find_elements(By.ID, 'cookie-policy-panel')) == 0
 
-    # Regisztráció érvényes adatokkal
+    # Regisztráció - Érvényes adatokkal
     def test_sign_up(self):
         sign_up_button = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/register"]')))
@@ -72,7 +73,7 @@ class TestConduit(object):
             EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="swal-button swal-button--confirm"]')))
         successful_ok_btn.click()
 
-    # Bejelentkezés érvényes adatokkal
+    # Bejelentkezés - Érvényes adatokkal
     def test_sign_in(self):
         sign_in_header_button = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/login"]')))
@@ -123,12 +124,14 @@ class TestConduit(object):
         for page_button in pagination_btns:
             page_button.click()
             page_counter += 1
+            # time.sleep(2)
+            # assert 'active' in page_button.get_attribute('class') # "page-item active"
 
         all_pages_number = len(pagination_btns)
 
         assert all_pages_number == page_counter
 
-    # Új adat bevitele
+    # Új adat bevitele - Egy új cikk létrehozása
     def test_write_new_data(self):
         sign_in(self.browser)
 
@@ -145,7 +148,8 @@ class TestConduit(object):
         about_input.send_keys(new_article_data['about'])
 
         article_body_input = WebDriverWait(self.browser, 5).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="Write your article (in markdown)"]')))
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, 'textarea[placeholder="Write your article (in markdown)"]')))
         article_body_input.send_keys(new_article_data['article'])
 
         tag_input = WebDriverWait(self.browser, 5).until(
@@ -161,7 +165,7 @@ class TestConduit(object):
 
         assert new_published_article.text == new_article_data['article_title']
 
-    # Ismételt és sorozatos adatbevitel adatforrásból
+    # Ismételt és sorozatos adatbevitel adatforrásból - Három új cikk létrehozása csv fájlból
     def test_new_data_from_file_constantly(self):
         sign_in(self.browser)
 
@@ -208,7 +212,7 @@ class TestConduit(object):
         sign_in(self.browser)
 
         profile_settings_btn = WebDriverWait(self.browser, 5).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/settings"]')))
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/settings"]')))
         profile_settings_btn.click()
 
         image_url_input = WebDriverWait(self.browser, 5).until(
@@ -238,11 +242,25 @@ class TestConduit(object):
             EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="swal-button swal-button--confirm"]')))
         successful_ok_btn.click()
 
+    # Adat vagy adatok törlése - saját cikk törlése
+    def test_delete_data(self):
+        sign_in(self.browser)
+        make_new_article(self.browser)
 
-    # Adat vagy adatok törlése
-    # def test_delete_data(self):
-    #     pass
-    #
+        delete_btn = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="btn btn-outline-danger btn-sm"]')))
+        assert delete_btn.is_displayed
+
+        delete_btn.click()
+
+        time.sleep(2)
+        assert self.browser.current_url == 'http://localhost:1667/#/'
+
+        global_feed_list = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//div[@class="home-global"]')))
+
+        assert not new_article_data['article_title'] in global_feed_list
+
     # Adatok lementése felületről
     # def test_save_data(self):
     #     pass
@@ -254,7 +272,11 @@ class TestConduit(object):
         log_out_btn = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located((By.XPATH, '//li[@class="nav-item"]')))[4]
         # assert len(self.browser.find_elements(By.XPATH, '//li[@class="nav-item"]')) == 7
+        # logged_in_menu_items_count = len(self.browser.find_elements(By.XPATH, '//li[@class="nav-item"]'))
         log_out_btn.click()
         time.sleep(2)
         assert len(self.browser.find_elements(By.XPATH, '//li[@class="nav-item"]')) == 4
+        # assert len(self.browser.find_elements(By.XPATH, '//li[@class="nav-item"]')) < logged_in_menu_items_count
         # assert not log_out_btn.is_enabled()
+        with pytest.raises(Exception) as e_info:
+            log_out_btn.click()
