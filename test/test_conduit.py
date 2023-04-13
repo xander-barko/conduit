@@ -38,6 +38,8 @@ class TestConduit(object):
             (By.CSS_SELECTOR, 'button[class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')))
         cookie_accept_btn.click()
 
+        time.sleep(2)
+
         assert len(self.browser.find_elements(By.ID, 'cookie-policy-panel')) == 0
 
     # Regisztráció - Érvényes adatokkal
