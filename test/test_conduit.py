@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support.ui import Select
 
-from sign_up_data import sign_up_data
+from sign_up_data import sign_up_data, new_article_data
 from functions_to_import import sign_in
 
 
@@ -18,9 +18,9 @@ class TestConduit(object):
         service = Service(executable_path=ChromeDriverManager().install())
         options = Options()
         options.add_experimental_option("detach", True)
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
+        # options.add_argument('--headless')
+        # options.add_argument('--no-sandbox')
+        # options.add_argument('--disable-dev-shm-usage')
         self.browser = webdriver.Chrome(service=service, options=options)
 
         URL = "http://localhost:1667/#/"
@@ -29,7 +29,7 @@ class TestConduit(object):
 
     def teardown_method(self):
         pass
-        self.browser.quit()
+        # self.browser.quit()
 
     # Adatkezelési nyilatkozat használata - cookie-k elfogadása
     def test_apply_privacy_statement_as_cookies(self):
@@ -119,23 +119,88 @@ class TestConduit(object):
         pagination_btns = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located((By.XPATH, '//a[@class="page-link"]')))
 
-        all_pages_number = len(pagination_btns)
-
         page_counter = 0
         for page_button in pagination_btns:
             page_button.click()
             page_counter += 1
 
+        all_pages_number = len(pagination_btns)
+
         assert all_pages_number == page_counter
 
     # Új adat bevitele
-    # def test_write_new_data(self):
-    #     pass
-    #
+    def test_write_new_data(self):
+        sign_in(self.browser)
+
+        new_article_btn = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/editor"]')))
+        new_article_btn.click()
+
+        article_title_input = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Article Title"]')))
+        article_title_input.send_keys(new_article_data['article_title'])
+
+        about_input = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="What\'s this article about?"]')))
+        about_input.send_keys(new_article_data['about'])
+
+        article_body_input = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="Write your article (in markdown)"]')))
+        article_body_input.send_keys(new_article_data['article'])
+
+        tag_input = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Enter tags"]')))
+        tag_input.send_keys(new_article_data['tags'])
+
+        publish_article_btn = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.XPATH, '//button[@class="btn btn-lg pull-xs-right btn-primary"]')))
+        publish_article_btn.click()
+
+        new_published_article = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.TAG_NAME, 'h1')))
+
+        assert new_published_article.text == new_article_data['article_title']
+
     # Ismételt és sorozatos adatbevitel adatforrásból
-    # def test_new_data_from_file_constantly(self):
-    #     pass
-    #
+    def test_new_data_from_file_constantly(self):
+        sign_in(self.browser)
+
+        with open('test/input_transfer.csv', 'r', encoding='UTF-8') as articles:
+            article_reader = csv.reader(articles, delimiter=',')
+            next(article_reader)
+
+            for article in article_reader:
+                new_article_btn = WebDriverWait(self.browser, 5).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, 'a[href="#/editor"]')))
+                new_article_btn.click()
+
+                article_title_input = WebDriverWait(self.browser, 5).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Article Title"]')))
+
+                about_input = WebDriverWait(self.browser, 5).until(
+                    EC.presence_of_element_located(
+                        (By.CSS_SELECTOR, 'input[placeholder="What\'s this article about?"]')))
+
+                article_body_input = WebDriverWait(self.browser, 5).until(
+                    EC.presence_of_element_located(
+                        (By.CSS_SELECTOR, 'textarea[placeholder="Write your article (in markdown)"]')))
+
+                tag_input = WebDriverWait(self.browser, 5).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Enter tags"]')))
+
+                publish_article_btn = WebDriverWait(self.browser, 5).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '//button[@class="btn btn-lg pull-xs-right btn-primary"]')))
+
+                article_title_input.send_keys(article[0])
+                about_input.send_keys(article[1])
+                article_body_input.send_keys(article[2])
+                tag_input.send_keys(article[3])
+
+                publish_article_btn.click()
+
+                time.sleep(2)
+
     # Meglévő adat módosítása
     # def test_modify_data(self):
     #     pass
