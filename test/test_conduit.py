@@ -262,9 +262,26 @@ class TestConduit(object):
         assert not new_article_data['article_title'] in global_feed_list
 
     # Adatok lementése felületről
-    # def test_save_data(self):
-    #     pass
-    #
+    def test_save_data(self):
+        sign_in(self.browser)
+        authors = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'a[class="author"]')))
+
+        with open('test/saved_data.csv', 'w', encoding='UTF-8') as author_saved:
+            # author_writer = csv.writer(author_saved)
+            # for author in authors:
+            #     author_writer.writerow([author.text])
+            for author in authors:
+                author_saved.write(author.text + '\n')
+
+        name_of_authors = []
+        with open('test/saved_data.csv', 'r', encoding='UTF-8') as read_authors:
+            author_reader = csv.reader(read_authors)
+            for author in author_reader:
+                name_of_authors.append(author)
+
+        assert len(name_of_authors) == len(authors)
+
     # Kijelentkezés
     def test_sign_out(self):
         sign_in(self.browser)
