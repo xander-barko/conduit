@@ -198,8 +198,11 @@ class TestConduit(object):
                 tag_input.send_keys(article[3])
 
                 publish_article_btn.click()
+                new_published_article = WebDriverWait(self.browser, 5).until(
+                    EC.presence_of_element_located((By.TAG_NAME, 'h1')))
+                assert new_published_article.text == article[0]
+                time.sleep(1)
 
-                time.sleep(2)
 
     # Meglévő adat módosítása
     # def test_modify_data(self):
