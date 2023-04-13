@@ -71,6 +71,8 @@ class TestConduit(object):
 
         assert success_report.text == "Your registration was successful!"
 
+        time.sleep(2)
+
         successful_ok_btn = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'button[class="swal-button swal-button--confirm"]')))
         successful_ok_btn.click()
