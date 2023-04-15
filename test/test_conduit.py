@@ -411,7 +411,7 @@ class TestConduit(object):
         sign_in(self.browser)
 
         # Megkeresem a kijelentkezés gomb elérési útját, létrehozok egy változót a kijelentkezés előtti menüpontok számával
-        # és rákattintok a kijelentkezés gombra
+        # és rákattintok a kijelentkezés gombra.
         log_out_btn = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located((By.XPATH, '//li[@class="nav-item"]')))[4]
 
