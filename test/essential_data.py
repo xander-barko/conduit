@@ -8,3 +8,5 @@ new_article_data = {
 }
 
 modify_profile = ['https://img.freepik.com/premium-vector/man-profile-cartoon_18591-58482.jpg?w=2000', 'Everything about me.', 'PassWorld10#']
+
+comment_data = 'I totally agree.'
