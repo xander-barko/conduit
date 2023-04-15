@@ -12,6 +12,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from essential_data import *
 from functions_to_import import *
 
+
 class TestConduit(object):
     def setup_method(self):
         service = Service(executable_path=ChromeDriverManager().install())
@@ -29,7 +30,6 @@ class TestConduit(object):
     def teardown_method(self):
         self.browser.quit()
 
-
     # Adatkezelési nyilatkozat használata - Cookie-k elfogadása
     def test_apply_privacy_statement_as_cookies(self):
 
@@ -43,7 +43,6 @@ class TestConduit(object):
 
         # Ellenőrzöm, hogy az elfogadást, illetve elutasítást tartalmazó panel eltűnik, elemeinek száma 0.
         assert len(self.browser.find_elements(By.ID, 'cookie-policy-panel')) == 0
-
 
     # Regisztráció - Érvényes adatokkal
     def test_sign_up(self):
@@ -92,7 +91,6 @@ class TestConduit(object):
 
         successful_ok_btn.click()
 
-
     # Bejelentkezés - Érvényes adatokkal
     def test_sign_in(self):
 
@@ -130,7 +128,6 @@ class TestConduit(object):
 
         assert name_text.text == sign_up_data[0]
 
-
     # Adatok listázása - Global Feed cikkek címeinek listázása bejelentkezés után
     def test_listed_datas(self):
 
@@ -149,7 +146,6 @@ class TestConduit(object):
         print(global_feed_list)
 
         assert len(global_feed_list) != 0
-
 
     # Több oldalas lista bejárása - A Global feed oldalainak bejárása
     def test_navigation_links(self):
@@ -179,7 +175,6 @@ class TestConduit(object):
         all_pages_number = len(pagination_btns)
 
         assert all_pages_number == page_counter
-
 
     # Új adat bevitele - Egy új komment és egy új cikk létrehozása
     def test_write_new_data(self):
@@ -251,7 +246,6 @@ class TestConduit(object):
 
         assert new_published_article.is_displayed()
         assert new_published_article.text == new_article_data['article_title']
-
 
     # Ismételt és sorozatos adatbevitel adatforrásból - Három új cikk létrehozása csv fájlból
     def test_new_data_from_file_constantly(self):
@@ -374,7 +368,6 @@ class TestConduit(object):
             EC.presence_of_all_elements_located((By.XPATH, '//div[@class="home-global"]')))
 
         assert not new_article_data['article_title'] in global_feed_list
-
 
     # Adatok lementése felületről
     def test_save_data(self):
