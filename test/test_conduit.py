@@ -12,7 +12,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from essential_data import *
 from functions_to_import import *
 
-
 class TestConduit(object):
     def setup_method(self):
         service = Service(executable_path=ChromeDriverManager().install())
