@@ -389,7 +389,7 @@ class TestConduit(object):
             EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'a[class="author"]')))
 
         # Létrehozok egy .csv kiterjesztésű fájlt, majd végigiterálva a szerzőkön beleírom azokat ebbe a fájlba, mindegyiket új sorba.
-        with open('test/saved_data.csv', 'w', encoding='UTF-8', newline='') as author_saved:
+        with open('saved_data.csv', 'w', encoding='UTF-8', newline='') as author_saved:
             author_writer = csv.writer(author_saved, delimiter=';')
             for author in authors:
                 author_writer.writerow([author.text])
@@ -397,7 +397,7 @@ class TestConduit(object):
         # Kiolvasom a létrehozott .csv fájból az adatokat, majd ezeken végigiterálva egy listába mentem azokat.
         # Ennek a listának a hosszát hasonlítom össze a DOM-ban kiválasztott lista elemeinek a számával.
         name_of_authors = []
-        with open('test/saved_data.csv', 'r', encoding='UTF-8') as read_authors:
+        with open('saved_data.csv', 'r', encoding='UTF-8') as read_authors:
             author_reader = csv.reader(read_authors, delimiter=';')
             for author in author_reader:
                 name_of_authors.append(author)
