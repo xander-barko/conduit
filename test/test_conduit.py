@@ -143,7 +143,6 @@ class TestConduit(object):
         global_feed_list = []
         for feed in global_feed_data:
             global_feed_list.append(feed.text)
-        print(global_feed_list)
 
         assert len(global_feed_list) != 0
 
